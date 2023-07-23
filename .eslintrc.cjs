@@ -17,6 +17,7 @@ const config = {
         "@typescript-eslint/no-unsafe-return": "off",
         "@typescript-eslint/no-unsafe-assignment": "off",
         "@typescript-eslint/restrict-plus-operands": "off",
+        "@typescript-eslint/noImplicitAny": "off",
       },
       parserOptions: {
         project: path.join(__dirname, "tsconfig.json"),

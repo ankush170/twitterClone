@@ -15,6 +15,7 @@ import type {
   import { InfiniteTweetList } from "~/components/InfiniteTweetList";
   import { useSession } from "next-auth/react";
   import { Button } from "~/components/Button";
+  import { LoadingSpinner } from "~/components/LoadingSpinner";
   
   const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     id,
@@ -39,9 +40,11 @@ import type {
         });
       },
     });
+
   
     if (profile == null || profile.name == null) {
-      return <ErrorPage statusCode={404} />;
+      return < LoadingSpinner />
+      // return <ErrorPage statusCode={404} />;
     }
   
     return (
