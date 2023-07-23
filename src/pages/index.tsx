@@ -24,6 +24,8 @@ import { api } from "~/utils/api";
 // const darkmode = new Darkmode(options);
 // darkmode.showWidget();
 
+
+
 const TABS = ["Recent", "Following"] as const;
 
 const Home: NextPage = () => {

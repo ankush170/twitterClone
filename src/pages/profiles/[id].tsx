@@ -7,7 +7,7 @@ import type {
   import Head from "next/head";
   import { ssgHelper } from "~/server/api/ssgHelper";
   import { api } from "~/utils/api";
-  import ErrorPage from "next/error";
+  // import ErrorPage from "next/error";
   import Link from "next/link";
   import { IconHoverEffect } from "~/components/IconHoverEffect";
   import { VscArrowLeft } from "react-icons/vsc";
