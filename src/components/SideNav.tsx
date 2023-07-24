@@ -2,9 +2,15 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { VscAccount, VscHome, VscSignIn, VscSignOut } from "react-icons/vsc";
 import { IconHoverEffect } from "./IconHoverEffect";
+// import { useState } from "react";
+
+// const navTabs = ["Home", "Profile"] as const;
+
 
 
 export function SideNav() {
+  // const [selectedTab, setSelectedTab] =
+  //   useState<(typeof navTabs)[number]>("Home");
   const session = useSession();
   const user = session.data?.user;
 
@@ -33,6 +39,23 @@ export function SideNav() {
             </Link>
           </li>
         )}
+        {/* <div className="flex">
+            {navTabs.map((tab) => {
+              return (
+                <button
+                  key={tab}
+                  className={`flex-grow p-2 hover:bg-gray-200 focus-visible:bg-gray-200 ${
+                    tab === selectedTab
+                      ? "border-r-4 border-r-blue-500 font-bold"
+                      : ""
+                  }`}
+                  onClick={() => setSelectedTab(tab)}
+                >
+                  {tab}
+                </button>
+              );
+            })}
+          </div> */}
         {user == null ? (
           <li>
             <button onClick={() => void signIn()}>
