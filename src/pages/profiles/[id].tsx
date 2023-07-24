@@ -7,7 +7,7 @@ import type {
   import Head from "next/head";
   import { ssgHelper } from "~/server/api/ssgHelper";
   import { api } from "~/utils/api";
-  import ErrorPage from "next/error";
+  // import ErrorPage from "next/error";
   import Link from "next/link";
   import { IconHoverEffect } from "~/components/IconHoverEffect";
   import { VscArrowLeft } from "react-icons/vsc";
@@ -15,6 +15,7 @@ import type {
   import { InfiniteTweetList } from "~/components/InfiniteTweetList";
   import { useSession } from "next-auth/react";
   import { Button } from "~/components/Button";
+  import { LoadingSpinner } from "~/components/LoadingSpinner";
   
   const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     id,
@@ -39,9 +40,11 @@ import type {
         });
       },
     });
+
   
     if (profile == null || profile.name == null) {
-      return <ErrorPage statusCode={404} />;
+      return < LoadingSpinner />
+      // return <ErrorPage statusCode={404} />;
     }
   
     return (

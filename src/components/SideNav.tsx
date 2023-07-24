@@ -3,6 +3,7 @@ import Link from "next/link";
 import { VscAccount, VscHome, VscSignIn, VscSignOut } from "react-icons/vsc";
 import { IconHoverEffect } from "./IconHoverEffect";
 
+
 export function SideNav() {
   const session = useSession();
   const user = session.data?.user;
