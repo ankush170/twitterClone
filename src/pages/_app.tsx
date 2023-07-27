@@ -7,8 +7,6 @@ import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import Head from "next/head";
 import { SideNav } from "~/components/SideNav";
-import type { AppProps } from 'next/app'
-import { ThemeProvider } from "next-themes"
 
 
 
