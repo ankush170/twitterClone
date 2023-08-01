@@ -5,8 +5,9 @@ import { ProfileImage } from "./ProfileImage";
 import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import { IconHoverEffect } from "./IconHoverEffect";
 import { LoadingSpinner } from "./LoadingSpinner";
-import type { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
+import { useState, type ButtonHTMLAttributes, type DetailedHTMLProps, FormEvent } from "react";
 import { api } from "~/utils/api";
+import { NewTweetForm } from "./NewTweetForm";
 
 type Tweet = {
   id: string;
@@ -121,7 +122,20 @@ function TweetCard({
   function handleDelete() {
     deleteTweet.mutate({ id });
   }
-  const deleteTweet = api.tweet.delete.useMutation({})
+  const deleteTweet = api.tweet.delete.useMutation()
+
+  const [inputValue, setInputValue] = useState(content);
+
+  function handleEdit(e: FormEvent<HTMLButtonElement>) {
+    e.preventDefault();
+
+    editTweet.mutate({ id, content: inputValue});
+  }
+  const editTweet = api.tweet.edit.useMutation({
+    onSuccess: (NewTweetForm) => setInputValue(content)
+  })
+
+
 
   if (user.id === session.data?.user.id){
     return (
@@ -133,7 +147,7 @@ function TweetCard({
           <div className="flex gap-1">
             <Link
               href={`/profiles/${user.id}`}
-              className="font-bold outline-none hover:underline focus-visible:underline"
+              className="font-bold outline-none hover:underline focus-visible:underline text-white"
             >
               {user.name}
             </Link>
@@ -142,7 +156,7 @@ function TweetCard({
               {dateTimeFormatter.format(createdAt)}
             </span>
           </div>
-          <p className="whitespace-pre-wrap">{content}</p>
+          <p className="whitespace-pre-wrap text-white">{content}</p>
           <HeartButton
             onClick={handleToggleLike}
             isLoading={toggleLike.isLoading}
@@ -152,8 +166,9 @@ function TweetCard({
           <DeleteButton 
           onClick={handleDelete}
           className="self-end"/>
-          {/* <EditButton
-          className="self-end"/> */}
+          <EditButton
+          onClick={handleEdit}
+          className="self-end"/>
         </div>
       </li>
     );
@@ -169,7 +184,7 @@ function TweetCard({
           <div className="flex gap-1">
             <Link
               href={`/profiles/${user.id}`}
-              className="font-bold outline-none hover:underline focus-visible:underline"
+              className="font-bold outline-none hover:underline focus-visible:underline text-white"
             >
               {user.name}
             </Link>
@@ -178,7 +193,7 @@ function TweetCard({
               {dateTimeFormatter.format(createdAt)}
             </span>
           </div>
-          <p className="whitespace-pre-wrap">{content}</p>
+          <p className="whitespace-pre-wrap text-white">{content}</p>
           <HeartButton
             onClick={handleToggleLike}
             isLoading={toggleLike.isLoading}
@@ -266,28 +281,28 @@ function DeleteButton({
   );
 }
 
-// type editButtonProps = {
-//   small?: boolean;
-//   gray?: boolean;
-//   className?: string;
-// } & DetailedHTMLProps<
-//   ButtonHTMLAttributes<HTMLButtonElement>,
-//   HTMLButtonElement
-// >;
+type editButtonProps = {
+  small?: boolean;
+  gray?: boolean;
+  className?: string;
+} & DetailedHTMLProps<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+>;
 
-// function EditButton({
-//   small = false,
-//   gray = false,
-//   className = "",
-//   ...props
-// }: editButtonProps) {
-//   const sizeClasses = small ? "px-2 py-1" : "px-3 py-1 font-bold";
-//   const colorClasses = gray ? "bg-gray-400 hover:bg-gray-300 focus-visible:bg-gray-300" : "bg-green-500 hover:bg-green-400 focus-visible:bg--400";
+function EditButton({
+  small = false,
+  gray = false,
+  className = "",
+  ...props
+}: editButtonProps) {
+  const sizeClasses = small ? "px-2 py-1" : "px-3 py-1 font-bold";
+  const colorClasses = gray ? "bg-gray-400 hover:bg-gray-300 focus-visible:bg-gray-300" : "bg-green-500 hover:bg-green-400 focus-visible:bg--400";
 
-//   return (
-//     <button
-//       className={`rounded-full text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50 ${sizeClasses} ${colorClasses} ${className}`}
-//       {...props}
-//     >Edit</button>
-//   );
-// }
+  return (
+    <button
+      className={`rounded-full text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50 ${sizeClasses} ${colorClasses} ${className}`}
+      {...props}
+    >Edit</button>
+  );
+}

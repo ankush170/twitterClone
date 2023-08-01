@@ -4,25 +4,6 @@ import { useState } from "react";
 import { InfiniteTweetList } from "~/components/InfiniteTweetList";
 import { NewTweetForm } from "~/components/NewTweetForm";
 import { api } from "~/utils/api";
-// import Darkmode from "darkmode-js";
- 
-
-// const options = {
-//   bottom: '32px', // default: '32px'
-//   right: 'unset', // default: '32px'
-//   left: '32px', // default: 'unset'
-//   time: '0.5s', // default: '0.3s'
-//   mixColor: '#fff', // default: '#fff'
-//   backgroundColor: '#fff',  // default: '#fff'
-//   buttonColorDark: '#100f2c',  // default: '#100f2c'
-//   buttonColorLight: '#fff', // default: '#fff'
-//   saveInCookies: false, // default: true,
-//   label: '🌓', // default: ''
-//   autoMatchOsTheme: true // default: true
-// }
- 
-// const darkmode = new Darkmode(options);
-// darkmode.showWidget();
 
 
 
@@ -34,7 +15,7 @@ const Home: NextPage = () => {
   const session = useSession();
   return (
     <>
-      <header className="sticky top-0 z-10 border-b bg-white pt-2">
+      <header className="sticky top-0 z-10 border-b bg-black text-white pt-2">
         <h1 className="mb-2 px-4 text-lg font-bold">Home</h1>
         {session.status === "authenticated" && (
           <div className="flex">
@@ -42,7 +23,7 @@ const Home: NextPage = () => {
               return (
                 <button
                   key={tab}
-                  className={`flex-grow p-2 hover:bg-gray-200 focus-visible:bg-gray-200 ${
+                  className={`flex-grow p-2 hover:bg-gray-500 focus-visible:bg-gray-500 ${
                     tab === selectedTab
                       ? "border-b-4 border-b-blue-500 font-bold"
                       : ""

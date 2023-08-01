@@ -9,14 +9,14 @@ export function SideNav() {
   const user = session.data?.user;
 
   return (
-    <nav className="sticky top-0 px-2 py-4">
+    <nav className="sticky top-0 px-2 py-4 bg-black">
       <ul className="flex flex-col items-start gap-2 whitespace-nowrap">
         <li>
           <Link href="/">
             <IconHoverEffect>
               <span className="flex items-center gap-4">
-                <VscHome className="h-8 w-8" />
-                <span className="hidden text-lg md:inline">Home</span>
+                <VscHome className="h-8 w-8 text-white" />
+                <span className="hidden text-lg md:inline text-white">Home</span>
               </span>
             </IconHoverEffect>
           </Link>
@@ -26,8 +26,8 @@ export function SideNav() {
             <Link href={`/profiles/${user.id}`}>
               <IconHoverEffect>
                 <span className="flex items-center gap-4">
-                  <VscAccount className="h-8 w-8" />
-                  <span className="hidden text-lg md:inline">Profile</span>
+                  <VscAccount className="h-8 w-8 text-white" />
+                  <span className="hidden text-lg md:inline text-white">Profile</span>
                 </span>
               </IconHoverEffect>
             </Link>
