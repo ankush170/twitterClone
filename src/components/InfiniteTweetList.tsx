@@ -5,9 +5,8 @@ import { ProfileImage } from "./ProfileImage";
 import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import { IconHoverEffect } from "./IconHoverEffect";
 import { LoadingSpinner } from "./LoadingSpinner";
-import { useState, type ButtonHTMLAttributes, type DetailedHTMLProps, FormEvent } from "react";
+import { useState, type ButtonHTMLAttributes, type DetailedHTMLProps, FormEvent, useCallback, useRef } from "react";
 import { api } from "~/utils/api";
-import { NewTweetForm } from "./NewTweetForm";
 
 type Tweet = {
   id: string;
@@ -16,6 +15,7 @@ type Tweet = {
   likeCount: number;
   likedByMe: boolean;
   user: { id: string; image: string | null; name: string | null };
+  editMode?: boolean;
 };
 
 type InfiniteTweetListProps = {
@@ -69,9 +69,15 @@ function TweetCard({
   createdAt,
   likeCount,
   likedByMe,
+  editMode,
 }: Tweet) {
   const trpcUtils = api.useContext();
   const session = useSession()
+  const textAreaRef = useRef<HTMLTextAreaElement>();
+  const inputRef = useCallback((textArea: HTMLTextAreaElement) => {
+    updateTextAreaSize(textArea);
+    textAreaRef.current = textArea;
+  }, []);
   const toggleLike = api.tweet.toggleLike.useMutation({
     onSuccess: ({ addedLike }) => {
       const updateData: Parameters<
@@ -126,14 +132,33 @@ function TweetCard({
 
   const [inputValue, setInputValue] = useState(content);
 
-  function handleEdit(e: FormEvent<HTMLButtonElement>) {
+  function handleEdit(e: FormEvent) {
     e.preventDefault();
-
     editTweet.mutate({ id, content: inputValue});
+    if (editMode){
+    return (
+      <form
+        onSubmit={handleEdit}
+        className="flex flex-col gap-2 border-b px-4 py-2"
+      >
+        <div className="flex gap-4">
+          <ProfileImage src={session.data?.user.image} />
+          <textarea
+            ref={inputRef}
+            style={{ height: 0 }}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            className="flex-grow resize-none overflow-hidden p-4 text-lg outline-none bg-black text-white"
+          />
+        </div>
+        <EditButton className="self-end">Save</EditButton>
+      </form>
+    )
+    }
   }
-  const editTweet = api.tweet.edit.useMutation({
-    onSuccess: (NewTweetForm) => setInputValue(content)
-  })
+      
+
+  const editTweet = api.tweet.edit.useMutation()
 
 
 
@@ -306,3 +331,7 @@ function EditButton({
     >Edit</button>
   );
 }
+function updateTextAreaSize(textArea: HTMLTextAreaElement) {
+  throw new Error("Function not implemented.");
+}
+
