@@ -4,8 +4,9 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { ProfileImage } from "./ProfileImage";
 import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import { IconHoverEffect } from "./IconHoverEffect";
-import { api } from "~/utils/api";
 import { LoadingSpinner } from "./LoadingSpinner";
+import type { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
+import { api } from "~/utils/api";
 
 type Tweet = {
   id: string;
@@ -69,6 +70,7 @@ function TweetCard({
   likedByMe,
 }: Tweet) {
   const trpcUtils = api.useContext();
+  const session = useSession()
   const toggleLike = api.tweet.toggleLike.useMutation({
     onSuccess: ({ addedLike }) => {
       const updateData: Parameters<
@@ -115,34 +117,78 @@ function TweetCard({
     toggleLike.mutate({ id });
   }
 
-  return (
-    <li className="flex gap-4 border-b px-4 py-4">
-      <Link href={`/profiles/${user.id}`}>
-        <ProfileImage src={user.image} />
-      </Link>
-      <div className="flex flex-grow flex-col">
-        <div className="flex gap-1">
-          <Link
-            href={`/profiles/${user.id}`}
-            className="font-bold outline-none hover:underline focus-visible:underline"
-          >
-            {user.name}
-          </Link>
-          <span className="text-gray-500">-</span>
-          <span className="text-gray-500">
-            {dateTimeFormatter.format(createdAt)}
-          </span>
+
+  function handleDelete() {
+    deleteTweet.mutate({ id });
+  }
+  const deleteTweet = api.tweet.delete.useMutation({})
+
+  if (user.id === session.data?.user.id){
+    return (
+      <li className="flex gap-4 border-b px-4 py-4">
+        <Link href={`/profiles/${user.id}`}>
+          <ProfileImage src={user.image} />
+        </Link>
+        <div className="flex flex-grow flex-col">
+          <div className="flex gap-1">
+            <Link
+              href={`/profiles/${user.id}`}
+              className="font-bold outline-none hover:underline focus-visible:underline"
+            >
+              {user.name}
+            </Link>
+            <span className="text-gray-500">-</span>
+            <span className="text-gray-500">
+              {dateTimeFormatter.format(createdAt)}
+            </span>
+          </div>
+          <p className="whitespace-pre-wrap">{content}</p>
+          <HeartButton
+            onClick={handleToggleLike}
+            isLoading={toggleLike.isLoading}
+            likedByMe={likedByMe}
+            likeCount={likeCount}
+          />
+          <DeleteButton 
+          onClick={handleDelete}
+          className="self-end"/>
+          {/* <EditButton
+          className="self-end"/> */}
         </div>
-        <p className="whitespace-pre-wrap">{content}</p>
-        <HeartButton
-          onClick={handleToggleLike}
-          isLoading={toggleLike.isLoading}
-          likedByMe={likedByMe}
-          likeCount={likeCount}
-        />
-      </div>
-    </li>
-  );
+      </li>
+    );
+  }
+
+  else {
+    return (
+      <li className="flex gap-4 border-b px-4 py-4">
+        <Link href={`/profiles/${user.id}`}>
+          <ProfileImage src={user.image} />
+        </Link>
+        <div className="flex flex-grow flex-col">
+          <div className="flex gap-1">
+            <Link
+              href={`/profiles/${user.id}`}
+              className="font-bold outline-none hover:underline focus-visible:underline"
+            >
+              {user.name}
+            </Link>
+            <span className="text-gray-500">-</span>
+            <span className="text-gray-500">
+              {dateTimeFormatter.format(createdAt)}
+            </span>
+          </div>
+          <p className="whitespace-pre-wrap">{content}</p>
+          <HeartButton
+            onClick={handleToggleLike}
+            isLoading={toggleLike.isLoading}
+            likedByMe={likedByMe}
+            likeCount={likeCount}
+          />
+        </div>
+      </li>
+    );
+  }
 }
 
 type HeartButtonProps = {
@@ -193,3 +239,55 @@ function HeartButton({
     </button>
   );
 }
+
+type delButtonProps = {
+  small?: boolean;
+  gray?: boolean;
+  className?: string;
+} & DetailedHTMLProps<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+>;
+
+function DeleteButton({
+  small = false,
+  gray = false,
+  className = "",
+  ...props
+}: delButtonProps) {
+  const sizeClasses = small ? "px-2 py-1" : "px-3 py-1 font-bold";
+  const colorClasses = gray ? "bg-gray-400 hover:bg-gray-300 focus-visible:bg-gray-300" : "bg-red-500 hover:bg-red-400 focus-visible:bg--400";
+
+  return (
+    <button
+      className={`rounded-full text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50 ${sizeClasses} ${colorClasses} ${className}`}
+      {...props}
+    >Delete</button>
+  );
+}
+
+// type editButtonProps = {
+//   small?: boolean;
+//   gray?: boolean;
+//   className?: string;
+// } & DetailedHTMLProps<
+//   ButtonHTMLAttributes<HTMLButtonElement>,
+//   HTMLButtonElement
+// >;
+
+// function EditButton({
+//   small = false,
+//   gray = false,
+//   className = "",
+//   ...props
+// }: editButtonProps) {
+//   const sizeClasses = small ? "px-2 py-1" : "px-3 py-1 font-bold";
+//   const colorClasses = gray ? "bg-gray-400 hover:bg-gray-300 focus-visible:bg-gray-300" : "bg-green-500 hover:bg-green-400 focus-visible:bg--400";
+
+//   return (
+//     <button
+//       className={`rounded-full text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50 ${sizeClasses} ${colorClasses} ${className}`}
+//       {...props}
+//     >Edit</button>
+//   );
+// }
